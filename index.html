@@ -1,0 +1,101 @@
+<html>
+<head>
+<script src="/public/bower_components/appbase-js/browser/appbase.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+<div class="row">
+<div class="col-md-4">
+</div>
+<div class="col-md-4">
+<div class='well'>
+	<center>Bitcoin USD</center><br/>
+	<div class="row">
+    <label for="fifm">Before 15 minutes:</label>
+    <p name="fifm" type="text" class="form-control" id="fifm"></p>
+  </div>
+  <div class="row">
+    <label for="last">Last:</label>
+    <p name="last" type="text" class="form-control" id="last"></p>
+  </div>
+  <div class="row">
+    <label for="buy">Buy:</label>
+    <p name="buy" type="text" class="form-control" id="buy"></p>
+  </div>
+  <div class="row">
+    <label for="sell">Sell:</label>
+    <p name="sell" type="text" class="form-control" id="sell"></p>
+  </div>
+  <div class="row">
+    <label for="symbol">Symbol:</label>
+    <p name="symbol" type="text" class="form-control" id="symbol"></p>
+  </div>
+  <div class="row">
+    <label for="price">Price:</label>
+    <input name="price" type="text" class="form-control" id="price"></input>
+  </div>
+  <div class="row">
+    <label for="email">Email:</label>
+    <input name="email" type="text" class="form-control" id="email"></input>
+  </div><br/>
+  <button type="button" id="submit" class="btn btn-primary">Submit</button>
+</div>
+</div>
+<div class="col-md-4">
+</div>
+</body>
+
+<script>
+var appbase = new Appbase({
+  url: 'https://scalr.api.appbase.io',
+  appname: 'testgsoc',
+  username: 'JxGrCcfHZ',
+  password: '1c46a541-98fa-404c-ad61-d41571a82e14'
+});
+
+(function poll() {
+    setTimeout(function() {
+        $.ajax({
+            url: "http://blockchain.info/ticker",
+            type: "GET",
+            success: function(data) {
+                console.log("polling");
+                $('#fifm').text(data.USD.last);
+                $('#last').text(data.USD.last);
+                $('#buy').text(data.USD.buy);
+                $('#sell').text(data.USD.sell);
+                $('#symbol').text(data.USD.symbol);
+                console.log(data.USD.last);
+            },
+            dataType: "json",
+            complete: poll,
+            timeout: 2000
+        })
+    }, 3000);
+})();
+
+
+$('#submit').on('click',function(){
+	$.ajax({
+		url: "/alerting", 
+		data: { 
+        		"price": $('#price').val(), 
+        		"email": $('#email').val()
+    		},
+		success: function(result){
+        		console.log(result);
+    }});
+});
+
+</script>
+
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "bitcoin_alert",
+  "version": "1.0.0",
+  "description": "Small Application for bitcoin price alerting!!",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "Puneet",
+  "license": "MIT",
+  "dependencies": {
+    "appbase-js": "^0.7.0",
+    "express": "^4.13.3",
+    "nodemailer": "^1.8.0",
+    "request": "^2.64.0"
+  }
+}

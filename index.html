@@ -20,29 +20,33 @@
 <div class='well'>
 	<center>Bitcoin USD</center><br/>
 	<div class="row">
-    <label for="fifm">Before 15 minutes:</label>
-    <p name="fifm" type="text" class="form-control" id="fifm"></p>
+    <label for="avg">Average of 24 Hours:</label>
+    <p name="avg" type="text" class="form-control" id="avg"></p>
   </div>
   <div class="row">
     <label for="last">Last:</label>
     <p name="last" type="text" class="form-control" id="last"></p>
   </div>
   <div class="row">
-    <label for="buy">Buy:</label>
-    <p name="buy" type="text" class="form-control" id="buy"></p>
+    <label for="bid">Bid:</label>
+    <p name="bid" type="text" class="form-control" id="bid"></p>
   </div>
   <div class="row">
-    <label for="sell">Sell:</label>
-    <p name="sell" type="text" class="form-control" id="sell"></p>
+    <label for="ask">Ask:</label>
+    <p name="ask" type="text" class="form-control" id="ask"></p>
   </div>
   <div class="row">
-    <label for="symbol">Symbol:</label>
-    <p name="symbol" type="text" class="form-control" id="symbol"></p>
-  </div>
+    <label for="volume">Total Volume:</label>
+    <p name="volume" type="text" class="form-control" id="volume"></p>
+  </div><br/>
+  <div class="row">
+    <label for="timestamp">Timestamp:</label>
+    <span id="timestamp"></span>
+  </div><br/>
   <div class="row">
     <label for="price">Price:</label>
     <input name="price" type="text" class="form-control" id="price"></input>
-  </div>
+  </div><br/>
   <div class="row">
     <label for="email">Email:</label>
     <input name="email" type="text" class="form-control" id="email"></input>
@@ -62,27 +66,20 @@ var appbase = new Appbase({
   password: '1c46a541-98fa-404c-ad61-d41571a82e14'
 });
 
-(function poll() {
-    setTimeout(function() {
-        $.ajax({
-            url: "http://blockchain.info/ticker",
-            type: "GET",
-            success: function(data) {
-                console.log("polling");
-                $('#fifm').text(data.USD.last);
-                $('#last').text(data.USD.last);
-                $('#buy').text(data.USD.buy);
-                $('#sell').text(data.USD.sell);
-                $('#symbol').text(data.USD.symbol);
-                console.log(data.USD.last);
-            },
-            dataType: "json",
-            complete: poll,
-            timeout: 2000
-        })
-    }, 3000);
-})();
-
+appbase.streamDocument({
+  type: "bitcoin_price",
+  id: '1'
+}).on('data', function(res) {
+  var data = res._source;
+  $('#avg').text(data.last);
+  $('#last').text(data.last);
+  $('#bid').text(data.bid);
+  $('#ask').text(data.ask);
+  $('#timestamp').text(data.timestamp);
+  $('#volume').text(data.total_vol);
+}).on('error', function(err) {
+  console.log("streaming error: ", err);
+});
 
 $('#submit').on('click',function(){
 	$.ajax({

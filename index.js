@@ -4,6 +4,7 @@ var fs = require('fs');
 var app = express();
 var nodemailer = require("nodemailer");
 var Appbase = require('appbase-js');
+var sgTransport = require('nodemailer-sendgrid-transport');
 
 /*
   Appbase Credentials. Just make new account at appbase and configure it according to your account.
@@ -18,13 +19,14 @@ var appbase = new Appbase({
 /*
   Initialize user and pass with any correct credentials in order to send mail.
 */
-var transporter = nodemailer.createTransport({
-    service: 'Gmail',
-    auth: {
-        user: '',
-        pass: ''
-    }
-});
+
+var credentials = {
+  auth: {
+    api_user: 'yashshah',
+    api_key: 'appbase12'
+  }
+}
+var transporter = nodemailer.createTransport(sgTransport(credentials));
 
 function send_mail(mail)
 {
@@ -61,6 +63,7 @@ app.get('/alerting', function (req, res) {
     username: 'JxGrCcfHZ',
     password: '1c46a541-98fa-404c-ad61-d41571a82e14'
   });
+  var flag = 1;
   app_base.streamSearch({
     type: 'bitcoin_price',
     body:{
@@ -74,18 +77,22 @@ app.get('/alerting', function (req, res) {
     console.log(response);
     console.log(req.param('price'));
     console.log(req.param('email'));
+    console.log(flag);
     if(response.hits == undefined || response.hits.total == 1){
       var mail = {
         /*
           Here change the from field and set it to some valid account.
         */
-        from: "puneet.241994.agarwal@gmail.com",
+        from: "Appbase.io",
         to: req.param('email'),
         subject: "Alert!! - Bitcoin Price changed",
         text: "Current Bitcoin Price in USD :- "+req.param('price'),
         html: "<b>Current Bitcoin Price in USD :- "+req.param('price')+"</b>"
       }
-      send_mail(mail);
+      if(flag == 1){
+        send_mail(mail);
+        flag = 0;
+      }
     }
   }).on('error', function(error) {
     console.log(error)

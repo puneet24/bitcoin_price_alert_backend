@@ -42,15 +42,6 @@ function send_mail(mail)
 /* This is to access any file withn folder, no routing required for these files. */
 app.use('/', express.static(__dirname + '/'));
 
-/* This is pointing to ROOT of the application i.e index.html */
-app.get('/', function (req, res) {
-  fs.readFile('index.html',function (err, data){
-        res.writeHead(200, {'Content-Type': 'text/html','Content-Length':data.length});
-        res.write(data);
-        res.end();
-    });
-});
-
 /* Price alert routing. The Client side makes the ajax call to this route with 
    params [alert_price,email] and as soon as the price gets equal to the 
    alert_price then this routes sends the email. 

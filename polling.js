@@ -25,7 +25,7 @@ var appbase = new Appbase({
 
         var url = 'https://api.bitcoinaverage.com/ticker/USD/';
         request(url, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
+        if (!error && response != undefined && response.statusCode == 200) {
           var data = JSON.parse(body);
           appbase.index({
                   type: 'bitcoin_price',

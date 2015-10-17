@@ -9,27 +9,37 @@ var sgTransport = require('nodemailer-sendgrid-transport');
 /*
   Appbase Credentials. Just make new account at appbase and configure it according to your account.
 */
-var appbase = new Appbase({
+var appbase_credentials = {
   url: 'https://scalr.api.appbase.io',
   appname: 'testgsoc',
   username: 'JxGrCcfHZ',
   password: '1c46a541-98fa-404c-ad61-d41571a82e14'
-});
+};
 
 /*
   Initialize user and pass with any correct credentials in order to send mail.
 */
-
 var credentials = {
   auth: {
     api_user: 'yashshah',
     api_key: 'appbase12'
   }
 }
+
 var transporter = nodemailer.createTransport(sgTransport(credentials));
 
-function send_mail(mail)
+function send_mail(price,email_address)
 {
+    var mail = {
+        /*
+          Here change the from field and set it to some valid account.
+        */
+        from: "Appbase.io",
+        to: email_address,
+        subject: "Alert!! - Bitcoin Price changed",
+        text: "Current Bitcoin Price in USD :- "+price,
+        html: "<b>Current Bitcoin Price in USD :- "+price+"</b>"
+    }
     console.log(mail);
     transporter.sendMail(mail, function(error, info){
       if(error){
@@ -48,12 +58,7 @@ app.use('/', express.static(__dirname + '/'));
 */
 app.get('/alerting', function (req, res) {
   console.log(req.param('price'));
-  var app_base = new Appbase({
-    url: 'https://scalr.api.appbase.io',
-    appname: 'testgsoc',
-    username: 'JxGrCcfHZ',
-    password: '1c46a541-98fa-404c-ad61-d41571a82e14'
-  });
+  var app_base = new Appbase(appbase_credentials);
   var flag = 1;
   app_base.streamSearch({
     type: 'bitcoin_price',
@@ -65,23 +70,9 @@ app.get('/alerting', function (req, res) {
       }
     }
   }).on('data', function(response) {
-    console.log(response);
-    console.log(req.param('price'));
-    console.log(req.param('email'));
-    console.log(flag);
     if(response.hits == undefined || response.hits.total == 1){
-      var mail = {
-        /*
-          Here change the from field and set it to some valid account.
-        */
-        from: "Appbase.io",
-        to: req.param('email'),
-        subject: "Alert!! - Bitcoin Price changed",
-        text: "Current Bitcoin Price in USD :- "+req.param('price'),
-        html: "<b>Current Bitcoin Price in USD :- "+req.param('price')+"</b>"
-      }
       if(flag == 1){
-        send_mail(mail);
+        send_mail(req.param('price'),req.param('email'));
         flag = 0;
       }
     }

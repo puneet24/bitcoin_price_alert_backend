@@ -100,7 +100,7 @@ app.get('/alerting', function (req, res) {
 });
 
 /* It will start the server. */
-var server = app.listen(3000, function () {
+var server = app.listen(8080,'104.131.165.92', function () {
   var host = server.address().address;
   var port = server.address().port;
   console.log('Bitcoin Price Alert app listening at http://%s:%s', host, port);

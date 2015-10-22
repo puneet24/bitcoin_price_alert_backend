@@ -57,24 +57,23 @@ app.use('/', express.static(__dirname + '/'));
    alert_price then this routes sends the email. 
 */
 app.get('/alerting', function (req, res) {
-  console.log(req.param('price'));
   var app_base = new Appbase(appbase_credentials);
-  var flag = 1;
   app_base.streamSearch({
     type: 'bitcoin_price',
     body:{
       "query":{
-        "match" : {
-          "last" : parseFloat(req.param('price'))
+        "range" : {
+          "last" : {
+            "gte" : parseFloat(req.param('lowerprice')),
+            "lte" : parseFloat(req.param('upperprice'))
+          }
         }
       }
     }
   }).on('data', function(response) {
     if(response.hits == undefined || response.hits.total == 1){
-      if(flag == 1){
-        send_mail(req.param('price'),req.param('email'));
-        flag = 0;
-      }
+        send_mail(response.hits.hits[0]._source.last,req.param('email'));
+        this.stop();
     }
   }).on('error', function(error) {
     console.log(error)

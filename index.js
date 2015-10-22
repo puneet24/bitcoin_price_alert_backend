@@ -59,7 +59,6 @@ app.use('/', express.static(__dirname + '/'));
 app.get('/alerting', function (req, res) {
   console.log(req.param('price'));
   var app_base = new Appbase(appbase_credentials);
-  var flag = 1;
   app_base.streamSearch({
     type: 'bitcoin_price',
     body:{
@@ -71,10 +70,8 @@ app.get('/alerting', function (req, res) {
     }
   }).on('data', function(response) {
     if(response.hits == undefined || response.hits.total == 1){
-      if(flag == 1){
         send_mail(req.param('price'),req.param('email'));
-        flag = 0;
-      }
+        this.stop();
     }
   }).on('error', function(error) {
     console.log(error)

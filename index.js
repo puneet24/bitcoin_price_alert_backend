@@ -21,7 +21,7 @@ var appbase_credentials = {
 */
 var credentials = {
   auth: {
-    api_user: 'yashshah',
+    api_user: 'appbase',
     api_key: 'appbase12'
   }
 }

@@ -5,16 +5,7 @@ var app = express();
 var nodemailer = require("nodemailer");
 var Appbase = require('appbase-js');
 var sgTransport = require('nodemailer-sendgrid-transport');
-
-/*
-  Appbase Credentials. Just make new account at appbase and configure it according to your account.
-*/
-var appbase_credentials = {
-  url: 'https://scalr.api.appbase.io',
-  appname: 'testgsoc',
-  username: 'JxGrCcfHZ',
-  password: '1c46a541-98fa-404c-ad61-d41571a82e14'
-};
+var config = require('./appbase_credentials.json')
 
 /*
   Initialize user and pass with any correct credentials in order to send mail.
@@ -57,7 +48,7 @@ app.use('/', express.static(__dirname + '/'));
    alert_price then this routes sends the email. 
 */
 app.get('/alerting', function (req, res) {
-  var app_base = new Appbase(appbase_credentials);
+  var app_base = new Appbase(config.appbase);
   app_base.streamSearch({
     type: 'bitcoin_price',
     body:{

@@ -1,6 +1,3 @@
-/*
-  Appbase Credentials. Just make new account at appbase and configure it according to your account.
-*/
 {
     "appbase": {
         "url": "https://scalr.api.appbase.io",

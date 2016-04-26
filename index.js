@@ -5,7 +5,7 @@ var app = express();
 var nodemailer = require("nodemailer");
 var Appbase = require('appbase-js');
 var sgTransport = require('nodemailer-sendgrid-transport');
-var config = require('./appbase_credentials.json')
+var config = require('./config.json')
 
 /*
   Initialize user and pass with any correct credentials in order to send mail.

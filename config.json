@@ -1,0 +1,13 @@
+{
+    "appbase": {
+        "url": "https://scalr.api.appbase.io",
+        "appname": "testgsoc",
+        "username": "JxGrCcfHZ",
+        "password": "1c46a541-98fa-404c-ad61-d41571a82e14",
+        "type": "feed"
+    },
+    "sendgrid":{
+        "api_user": "appbase",
+        "api_key": "appbase12"
+    }
+}
